@@ -115,8 +115,15 @@
     "removeBtn": "હટાવો",
     "waitingOver75": "75 મિનિટથી વધુ રાહ",
     "emptyState": "કોઈ રાહમાં નથી — સીધા આવો!",
+    "chairBusy": "સેવા ચાલુ",
+    "chairFree": "ખુરશી ઉપલબ્ધ",
+    "removeConfirm": "ગ્રાહકને કતારમાંથી હટાવવા છે?",
+    "noShowConfirm": "ગ્રાહકને ગેરહાજર ચિહ્નિત કરવા છે?",
+    "noNextEligible": "આ ખુરશી માટે કોઈ ગ્રાહક ઉપલબ્ધ નથી",
     "timeWaiting": "રાહ: {{time}} મિનિટ",
-    "calledCountdown": "{{time}} માં હાજર થાઓ"
+    "calledCountdown": "{{time}} માં હાજર થાઓ",
+    "walkinTitle": "સીધા ગ્રાહક ઉમેરો (વોક-ઇન)",
+    "walkinSuccess": "વોક-ઇન ટોકન બનાવ્યું"
   },
   "barber": {
     "title": "હજામ ખુરશી",

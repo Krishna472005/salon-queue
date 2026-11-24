@@ -115,8 +115,15 @@
     "removeBtn": "Remove",
     "waitingOver75": "Waiting > 75 min",
     "emptyState": "Nobody waiting — walk right in!",
+    "chairBusy": "Busy",
+    "chairFree": "Chair Free",
+    "removeConfirm": "Remove customer from queue?",
+    "noShowConfirm": "Mark customer as No-show?",
+    "noNextEligible": "No waiting customers eligible for this chair",
     "timeWaiting": "Waiting {{time}} min",
-    "calledCountdown": "Arrive within {{time}}"
+    "calledCountdown": "Arrive within {{time}}",
+    "walkinTitle": "Add Walk-in Customer",
+    "walkinSuccess": "Walk-in token created"
   },
   "barber": {
     "title": "Barber Chair",

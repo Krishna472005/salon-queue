@@ -25,6 +25,15 @@ interface QueueContextType {
   getTokenById: (tokenId: string) => Promise<QueueEntry | null>;
   extendRunningLate: (tokenId: string) => Promise<boolean>;
   releaseCustomerToken: (tokenId: string) => Promise<boolean>;
+  callNextCustomer: (barberId: string) => Promise<QueueEntry | null>;
+  addWalkinCustomer: (
+    name: string,
+    phone: string,
+    serviceIds: string[],
+    preferredBarberId?: string | null
+  ) => Promise<QueueEntry>;
+  markNoShowCustomer: (tokenId: string) => Promise<boolean>;
+  toggleOnlineTokens: (enabled: boolean) => Promise<void>;
   refreshData: () => Promise<void>;
 }
 
@@ -490,6 +499,138 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  // Call Next Customer for a barber (strictly uses call_next Postgres function)
+  const callNextCustomer = async (barberId: string): Promise<QueueEntry | null> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('call_next', {
+        p_barber_id: barberId,
+      });
+      if (error) {
+        throw new Error(error.message);
+      }
+      await fetchData();
+      return (data as QueueEntry) || null;
+    } else {
+      // Offline mock implementation replicating call_next SQL function logic:
+      // Find earliest waiting customer where preferred_barber_id is barberId or null
+      const all = getLocalQueue();
+      const eligibleIndex = all.findIndex(
+        (e) =>
+          e.status === 'waiting' &&
+          (e.preferred_barber_id === barberId || !e.preferred_barber_id)
+      );
+
+      if (eligibleIndex === -1) {
+        return null;
+      }
+
+      const updated = [...all];
+      updated[eligibleIndex] = {
+        ...updated[eligibleIndex],
+        status: 'called',
+        assigned_barber_id: barberId,
+        called_at: new Date().toISOString(),
+      };
+
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return updated[eligibleIndex];
+    }
+  };
+
+  // Add Walk-in customer
+  const addWalkinCustomer = async (
+    name: string,
+    phone: string,
+    serviceIds: string[],
+    preferredBarberId?: string | null
+  ): Promise<QueueEntry> => {
+    const cleanPhone = phone.replace(/\D/g, '');
+
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('add_walkin', {
+        p_customer_name: name.trim(),
+        p_phone: cleanPhone,
+        p_service_ids: serviceIds,
+        p_preferred_barber_id: preferredBarberId || null,
+      });
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      await fetchData();
+      return data as QueueEntry;
+    } else {
+      const mockServices = services.filter((s) => serviceIds.includes(s.id));
+      const totalMinutes = mockServices.reduce((sum, s) => sum + s.minutes, 0);
+      const totalPrice = mockServices.reduce((sum, s) => sum + s.price, 0);
+      const nextNumber = queueEntries.length + 1;
+
+      const newEntry: QueueEntry = {
+        id: `mock-walkin-${Date.now()}`,
+        token_number: nextNumber,
+        token_prefix: 'W',
+        token_date: new Date().toISOString().split('T')[0],
+        customer_name: name.trim(),
+        phone: cleanPhone,
+        service_ids: serviceIds,
+        total_minutes: totalMinutes,
+        total_price: totalPrice,
+        preferred_barber_id: preferredBarberId || null,
+        status: 'waiting',
+        late_extension_used: false,
+        joined_at: new Date().toISOString(),
+      };
+
+      const all = getLocalQueue();
+      const updated = [...all, newEntry];
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return newEntry;
+    }
+  };
+
+  // Mark customer as No-Show
+  const markNoShowCustomer = async (tokenId: string): Promise<boolean> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('mark_no_show', {
+        p_token_id: tokenId,
+      });
+      if (error) {
+        throw new Error(error.message);
+      }
+      await fetchData();
+      return Boolean(data);
+    } else {
+      const all = getLocalQueue();
+      const updated = all.map((e) =>
+        e.id === tokenId ? { ...e, status: 'no_show' as const } : e
+      );
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return true;
+    }
+  };
+
+  // Toggle online tokens on/off
+  const toggleOnlineTokens = async (enabled: boolean): Promise<void> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('settings')
+        .update({ online_tokens_on: enabled })
+        .eq('id', 1);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+      await fetchData();
+    } else {
+      if (settings) {
+        setSettings({ ...settings, online_tokens_on: enabled });
+      }
+    }
+  };
+
   return (
     <QueueContext.Provider
       value={{
@@ -510,6 +651,10 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         getTokenById,
         extendRunningLate,
         releaseCustomerToken,
+        callNextCustomer,
+        addWalkinCustomer,
+        markNoShowCustomer,
+        toggleOnlineTokens,
         refreshData: fetchData,
       }}
     >
