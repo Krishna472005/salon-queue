@@ -1,5 +1,5 @@
 # ALL1 Salon Queue
-**Live demo:** https://YOUR-APP.vercel.app
+**Live demo:** https://salon-queue-psi.vercel.app
 **Demo PINs:** reception 2468 · barber 1122 · owner 1357
 **Hosted on:** Vercel (frontend) + Supabase (database, Google login, realtime)
 
