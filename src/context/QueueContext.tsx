@@ -34,6 +34,11 @@ interface QueueContextType {
   ) => Promise<QueueEntry>;
   markNoShowCustomer: (tokenId: string) => Promise<boolean>;
   toggleOnlineTokens: (enabled: boolean) => Promise<void>;
+  startService: (tokenId: string, barberId: string) => Promise<boolean>;
+  finishService: (tokenId: string, barberId: string) => Promise<boolean>;
+  toggleBarberBreak: (barberId: string, onBreak: boolean) => Promise<boolean>;
+  getServedTodayCount: (barberId: string) => number;
+  lastCalledToken: QueueEntry | null;
   refreshData: () => Promise<void>;
 }
 
@@ -631,6 +636,102 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  // State to track most recently called token for TV flash chime
+  const [lastCalledToken, setLastCalledToken] = useState<QueueEntry | null>(null);
+
+  // Monitor queueEntries for newly called token
+  useEffect(() => {
+    const called = queueEntries.find((e) => e.status === 'called');
+    if (called) {
+      setLastCalledToken(called);
+    }
+  }, [queueEntries]);
+
+  // Start Service (Barber S5)
+  const startService = async (tokenId: string, barberId: string): Promise<boolean> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('start_service', {
+        p_token_id: tokenId,
+        p_barber_id: barberId,
+      });
+      if (error) throw new Error(error.message);
+      await fetchData();
+      return Boolean(data);
+    } else {
+      const all = getLocalQueue();
+      const updated = all.map((e) =>
+        e.id === tokenId
+          ? {
+              ...e,
+              status: 'in_chair' as const,
+              assigned_barber_id: barberId,
+              started_at: new Date().toISOString(),
+            }
+          : e
+      );
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return true;
+    }
+  };
+
+  // Finish Service (Barber S5)
+  const finishService = async (tokenId: string, barberId: string): Promise<boolean> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('finish_service', {
+        p_token_id: tokenId,
+        p_barber_id: barberId,
+      });
+      if (error) throw new Error(error.message);
+      await fetchData();
+      return Boolean(data);
+    } else {
+      const all = getLocalQueue();
+      const updated = all.map((e) =>
+        e.id === tokenId
+          ? {
+              ...e,
+              status: 'done' as const,
+              assigned_barber_id: barberId,
+              finished_at: new Date().toISOString(),
+            }
+          : e
+      );
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return true;
+    }
+  };
+
+  // Toggle Barber Break
+  const toggleBarberBreak = async (barberId: string, onBreak: boolean): Promise<boolean> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('barbers')
+        .update({ on_break: onBreak })
+        .eq('id', barberId);
+      if (error) throw new Error(error.message);
+      await fetchData();
+      return true;
+    } else {
+      setBarbers((prev) =>
+        prev.map((b) => (b.id === barberId ? { ...b, on_break: onBreak } : b))
+      );
+      return true;
+    }
+  };
+
+  // Count served today for a barber
+  const getServedTodayCount = useCallback(
+    (barberId: string): number => {
+      const all = isSupabaseConfigured ? queueEntries : getLocalQueue();
+      return all.filter(
+        (e) => e.assigned_barber_id === barberId && e.status === 'done'
+      ).length;
+    },
+    [queueEntries]
+  );
+
   return (
     <QueueContext.Provider
       value={{
@@ -655,6 +756,11 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         addWalkinCustomer,
         markNoShowCustomer,
         toggleOnlineTokens,
+        startService,
+        finishService,
+        toggleBarberBreak,
+        getServedTodayCount,
+        lastCalledToken,
         refreshData: fetchData,
       }}
     >

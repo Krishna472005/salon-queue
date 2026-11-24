@@ -143,8 +143,12 @@
     "nowServing": "Now Serving",
     "chairFree": "Chair Free",
     "nextInLine": "Next In Line",
+    "calling": "Calling",
+    "onBreak": "On break",
+    "onlineOpen": "Open · Closes 9 PM",
+    "onlineClosed": "Online tokens paused",
     "scanPrompt": "Scan QR to get your token on phone",
-    "enableSound": "Tap anywhere to enable sound chime"
+    "enableSound": "Tap anywhere to enable audio chime on calls"
   },
   "owner": {
     "title": "Owner Administration",
