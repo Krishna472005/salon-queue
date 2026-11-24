@@ -3,6 +3,39 @@
 **Demo PINs:** reception 2468 · barber 1122 · owner 1357
 **Hosted on:** Vercel (frontend) + Supabase (database, Google login, realtime)
 
+## Deploy to Vercel (Quick Steps)
+
+1. **Push Code to GitHub:**
+   Ensure this repository is pushed to your GitHub account.
+
+2. **Import into Vercel:**
+   - Go to [vercel.com/new](https://vercel.com/new) and import this repository.
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+   - **Install Command**: `npm install`
+   *(SPA deep routes like `/reception` are handled automatically by `vercel.json`)*
+
+3. **Configure Environment Variables in Vercel:**
+   Add these in Vercel Project Settings → **Environment Variables**:
+   ```env
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
+   VITE_DEMO_PIN_ENABLED=true
+   VITE_DEMO_RECEPTION_EMAIL=reception@all1salon.com
+   VITE_DEMO_RECEPTION_PASSWORD=All1Reception2468!
+   VITE_DEMO_OWNER_EMAIL=owner@all1salon.com
+   VITE_DEMO_OWNER_PASSWORD=All1Owner1357!
+   VITE_DEMO_BARBER_EMAIL=barber@all1salon.com
+   VITE_DEMO_BARBER_PASSWORD=All1Barber1122!
+   ```
+
+4. **Deploy & Add Supabase Redirect URI:**
+   - Click **Deploy**.
+   - Copy your assigned Vercel URL (e.g. `https://all1-salon-queue.vercel.app`).
+   - In Supabase Dashboard → **Authentication** → **URL Configuration**, add your Vercel URL to **Redirect URLs**.
+   - Replace `https://YOUR-APP.vercel.app` on line 2 of `README.md` with your real Vercel URL!
+
 ## About
 ALL1 is a real-time salon queue web app. Customers take a digital token on their phone, watch their wait shrink with live updates, and are called by a barber (Mahesh, Suresh or Ashlesh). Reception and barbers manage the line; a waiting-room TV displays chair status and upcoming tokens.
 
