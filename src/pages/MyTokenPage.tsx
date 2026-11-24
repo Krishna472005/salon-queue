@@ -181,8 +181,8 @@ export const MyTokenPage: React.FC = () => {
     localStorage.removeItem('all1_active_token_id');
     navigate('/token', {
       state: {
-        prefillName: token?.customer_name || '',
-        prefillPhone: token?.phone || '',
+        prefillName: token?.customer_name || localStorage.getItem('all1_user_name') || '',
+        prefillPhone: token?.phone || localStorage.getItem('all1_user_phone') || '',
       },
     });
   };

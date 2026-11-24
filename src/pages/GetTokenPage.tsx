@@ -45,9 +45,14 @@ export const GetTokenPage: React.FC = () => {
 
   // Form state
   const [name, setName] = useState(
-    prefill.prefillName || user?.user_metadata?.full_name || ''
+    prefill.prefillName ||
+      user?.user_metadata?.full_name ||
+      localStorage.getItem('all1_user_name') ||
+      ''
   );
-  const [phone, setPhone] = useState(prefill.prefillPhone || '');
+  const [phone, setPhone] = useState(
+    prefill.prefillPhone || localStorage.getItem('all1_user_phone') || ''
+  );
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([
     services[0]?.id || '',
   ]);
@@ -179,6 +184,9 @@ export const GetTokenPage: React.FC = () => {
     setErrorMsg('');
 
     try {
+      localStorage.setItem('all1_user_name', name.trim());
+      localStorage.setItem('all1_user_phone', cleanPhone);
+
       const result = await takeOnlineToken(
         name,
         cleanPhone,
