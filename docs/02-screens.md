@@ -10,7 +10,8 @@ Look & fonts: see docs/04-design-system.md.
 - Three barber tiles: Mahesh · Suresh · Ashlesh — each with a status dot (Working / Free / On break) and own wait time
 - Menu strip: the 5 services with icon, time and price
 - Main coral button [ Get my token ] (disabled + reason when closed)
-- Link: "Already have a token? Find it" (enter phone number)
+- QR code card that opens /token for quick access
+- Link: "Already have a token? Find it" (enter phone number opens "Find my token" modal)
 - Footer link: Staff login
 
 ## S2 — Get Token (/token) · phone
@@ -24,7 +25,7 @@ Look & fonts: see docs/04-design-system.md.
 
 ## S3 — My Token (/t/:id) · phone
 - Ticket-style card with big token (e.g. O-14) and customer name
-- "You are 4th" + circular wait ring "about 45 min" that refreshes by itself
+- "You are 4th" + circular wait ring "about 45 min" that refreshes by itself, with expected turn time (e.g. "around 6:45 PM") displayed next to the wait ring
 - Progress line: Waiting → Head over → Called → In chair → Done
 - When 2nd: banner "Head over now — you're nearly up"
 - When called: full-screen takeover "You're up! Go to Suresh" with pulse, vibration, sound
@@ -52,6 +53,7 @@ Look & fonts: see docs/04-design-system.md.
 - Header: logo, clock, open/close badge
 - One big row per barber: photo, name, "Now serving O-12" (aqua ring when busy)
 - "Next in line": 5 tokens with estimated times, very large type
+- QR code that opens /token for quick phone token booking
 - New call flashes coral→aqua with a chime ("Tap to enable sound" overlay on first load)
 - Bottom ticker: menu highlights, e.g. "Facial ₹750 · 45 min"
 

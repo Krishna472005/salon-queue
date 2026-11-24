@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" width="160" height="48" fill="none">
+  <defs>
+    <linearGradient id="logoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1F3A"/>
+      <stop offset="100%" stop-color="#2F6BFF"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded-square badge -->
+  <rect x="0" y="2" width="44" height="44" rx="12" fill="url(#logoBg)"/>
+  
+  <!-- "1" inside badge with scissor-gap cutout -->
+  <path d="M 14 17 L 24 10 L 24 21 L 21 23 L 24 25 L 24 38 L 16 38" fill="#FF6F59"/>
+  <!-- Scissor rings/pivot notch in white -->
+  <circle cx="19.5" cy="21" r="1.5" fill="#FFFFFF"/>
+  <circle cx="19.5" cy="25" r="1.5" fill="#FFFFFF"/>
+  
+  <!-- "ALL" typography -->
+  <text x="54" y="33" font-family="Sora, sans-serif" font-weight="800" font-size="28" fill="#0B1F3A" letter-spacing="-0.5">ALL</text>
+  <!-- "1" alongside -->
+  <text x="114" y="33" font-family="Sora, sans-serif" font-weight="800" font-size="28" fill="#FF6F59" letter-spacing="-0.5">1</text>
+</svg>

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
+  <defs>
+    <linearGradient id="favGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B1F3A"/>
+      <stop offset="100%" stop-color="#2F6BFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="48" height="48" rx="12" fill="url(#favGrad)"/>
+  <!-- "1" in coral with scissor-notch cutout in stem -->
+  <path d="M 18 17 L 26 12 L 26 23 L 23 25 L 26 27 L 26 36 L 18 36" fill="#FF6F59"/>
+  <!-- Scissor blades icon subtle white hint -->
+  <circle cx="21" cy="22" r="1.5" fill="#FFFFFF"/>
+  <circle cx="21" cy="28" r="1.5" fill="#FFFFFF"/>
+</svg>

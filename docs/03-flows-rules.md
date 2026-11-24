@@ -29,6 +29,7 @@ Reception taps + Walk-in → name, phone, services, barber → gets token W-15 a
 13. Token prefix: O- for online, W- for walk-in; the number counter resets each day.
 14. Permissions: owner edits settings; receptionist manages the line; a barber only controls their own customers.
 15. Stored in UTC, shown in Asia/Kolkata.
+16. Expected turn time = now + estimated wait, shown in Asia/Kolkata.
 
 ## Test checklist
 [ ] Haircut + Facial shows 105 min and ₹1050
@@ -48,3 +49,5 @@ Reception taps + Walk-in → name, phone, services, barber → gets token W-15 a
 [ ] A non-staff Google account cannot open /reception or /owner
 [ ] Refreshing /reception on the live link does not give 404
 [ ] Data survives refresh and browser restart
+[ ] QR on TV opens /token
+[ ] Expected turn time matches the wait estimate

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 48" width="160" height="48" fill="none">
+  <defs>
+    <linearGradient id="logoLightBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#12294D"/>
+      <stop offset="100%" stop-color="#2F6BFF"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded-square badge on dark -->
+  <rect x="0" y="2" width="44" height="44" rx="12" fill="url(#logoLightBg)" stroke="#22D3EE" stroke-width="1.5"/>
+  
+  <!-- "1" inside badge with scissor-gap cutout -->
+  <path d="M 14 17 L 24 10 L 24 21 L 21 23 L 24 25 L 24 38 L 16 38" fill="#FF6F59"/>
+  <circle cx="19.5" cy="21" r="1.5" fill="#FFFFFF"/>
+  <circle cx="19.5" cy="25" r="1.5" fill="#FFFFFF"/>
+  
+  <!-- "ALL" in white on dark -->
+  <text x="54" y="33" font-family="Sora, sans-serif" font-weight="800" font-size="28" fill="#FFFFFF" letter-spacing="-0.5">ALL</text>
+  <!-- "1" in coral -->
+  <text x="114" y="33" font-family="Sora, sans-serif" font-weight="800" font-size="28" fill="#FF6F59" letter-spacing="-0.5">1</text>
+</svg>
