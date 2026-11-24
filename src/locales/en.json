@@ -160,7 +160,21 @@
     "todayServed": "Served Today",
     "avgWait": "Average Wait",
     "noShows": "No-shows",
-    "busiestHour": "Busiest Hours"
+    "busiestHour": "Busiest Hours",
+    "addService": "Add Service",
+    "editService": "Edit Service",
+    "activeStatus": "Active",
+    "inactiveStatus": "Disabled",
+    "workingToday": "Working today",
+    "offDuty": "Off duty",
+    "addStaff": "Add Staff Member",
+    "staffEmail": "Staff Google Email",
+    "staffRole": "Role",
+    "deleteStaff": "Remove",
+    "openingHours": "Opening Hours",
+    "openTime": "Open Time",
+    "closeTime": "Close Time",
+    "salonHoursDesc": "Online tokens automatically cut off 20 min before closing (20:40)"
   },
   "login": {
     "title": "Staff Sign In",

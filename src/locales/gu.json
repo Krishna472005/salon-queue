@@ -160,7 +160,21 @@
     "todayServed": "આજે કુલ સેવાઓ",
     "avgWait": "સરેરાશ રાહ",
     "noShows": "ગેરહાજર",
-    "busiestHour": "સૌથી વ્યસ્ત કલાકો"
+    "busiestHour": "સૌથી વ્યસ્ત કલાકો",
+    "addService": "સેવા ઉમેરો",
+    "editService": "સેવા સુધારો",
+    "activeStatus": "ચાલુ",
+    "inactiveStatus": "બંધ",
+    "workingToday": "આજે હાજર",
+    "offDuty": "આજે રજા",
+    "addStaff": "નવા સ્ટાફ ઉમેરો",
+    "staffEmail": "સ્ટાફ ગૂગલ ઇમેઇલ",
+    "staffRole": "હોદ્દો",
+    "deleteStaff": "હટાવો",
+    "openingHours": "ખુલવાનો સમય",
+    "openTime": "શરૂઆત સમય",
+    "closeTime": "બંધ થવાનો સમય",
+    "salonHoursDesc": "ઓનલાઇન ટોકન બંધ થવાના 20 મિનિટ પહેલાં આપમેળે બંધ થાય છે"
   },
   "login": {
     "title": "સ્ટાફ સાઇન ઇન",

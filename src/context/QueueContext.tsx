@@ -38,6 +38,11 @@ interface QueueContextType {
   finishService: (tokenId: string, barberId: string) => Promise<boolean>;
   toggleBarberBreak: (barberId: string, onBreak: boolean) => Promise<boolean>;
   getServedTodayCount: (barberId: string) => number;
+  updateService: (service: Service) => Promise<void>;
+  createService: (newService: Omit<Service, 'id'>) => Promise<void>;
+  toggleServiceActive: (serviceId: string, active: boolean) => Promise<void>;
+  updateBarber: (barberId: string, updates: Partial<Barber>) => Promise<void>;
+  updateSettings: (updates: Partial<Settings>) => Promise<void>;
   lastCalledToken: QueueEntry | null;
   refreshData: () => Promise<void>;
 }
@@ -732,6 +737,96 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     [queueEntries]
   );
 
+  // Update existing service
+  const updateService = async (updated: Service): Promise<void> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('services')
+        .update({
+          name_en: updated.name_en,
+          name_gu: updated.name_gu,
+          minutes: updated.minutes,
+          price: updated.price,
+          icon: updated.icon,
+          active: updated.active,
+        })
+        .eq('id', updated.id);
+
+      if (error) throw new Error(error.message);
+      await fetchData();
+    } else {
+      setServices((prev) =>
+        prev.map((s) => (s.id === updated.id ? updated : s))
+      );
+    }
+  };
+
+  // Create new service
+  const createService = async (newService: Omit<Service, 'id'>): Promise<void> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase.from('services').insert([newService]);
+      if (error) throw new Error(error.message);
+      await fetchData();
+    } else {
+      const created: Service = {
+        ...newService,
+        id: `mock-service-${Date.now()}`,
+      };
+      setServices((prev) => [...prev, created]);
+    }
+  };
+
+  // Toggle service active state (switched-off service must disappear from Get Token)
+  const toggleServiceActive = async (serviceId: string, active: boolean): Promise<void> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('services')
+        .update({ active })
+        .eq('id', serviceId);
+
+      if (error) throw new Error(error.message);
+      await fetchData();
+    } else {
+      setServices((prev) =>
+        prev.map((s) => (s.id === serviceId ? { ...s, active } : s))
+      );
+    }
+  };
+
+  // Update barber (working_today, email, photo)
+  const updateBarber = async (barberId: string, updates: Partial<Barber>): Promise<void> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('barbers')
+        .update(updates)
+        .eq('id', barberId);
+
+      if (error) throw new Error(error.message);
+      await fetchData();
+    } else {
+      setBarbers((prev) =>
+        prev.map((b) => (b.id === barberId ? { ...b, ...updates } : b))
+      );
+    }
+  };
+
+  // Update salon settings
+  const updateSettings = async (updates: Partial<Settings>): Promise<void> => {
+    if (isSupabaseConfigured) {
+      const { error } = await supabase
+        .from('settings')
+        .update(updates)
+        .eq('id', 1);
+
+      if (error) throw new Error(error.message);
+      await fetchData();
+    } else {
+      if (settings) {
+        setSettings({ ...settings, ...updates });
+      }
+    }
+  };
+
   return (
     <QueueContext.Provider
       value={{
@@ -760,6 +855,11 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         finishService,
         toggleBarberBreak,
         getServedTodayCount,
+        updateService,
+        createService,
+        toggleServiceActive,
+        updateBarber,
+        updateSettings,
         lastCalledToken,
         refreshData: fetchData,
       }}
