@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Header } from '../components/common/Header';
 import { Footer } from '../components/common/Footer';
 import { TicketCard } from '../components/queue/TicketCard';
@@ -23,6 +23,7 @@ import {
 export const MyTokenPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useI18n();
+  const navigate = useNavigate();
 
   const {
     queueEntries,
@@ -175,6 +176,17 @@ export const MyTokenPage: React.FC = () => {
     }
   };
 
+  // Handle No-show / Cancelled Re-entry
+  const handleTakeNewToken = () => {
+    localStorage.removeItem('all1_active_token_id');
+    navigate('/token', {
+      state: {
+        prefillName: token?.customer_name || '',
+        prefillPhone: token?.phone || '',
+      },
+    });
+  };
+
   // Stepper state
   const currentStepIndex = useMemo(() => {
     if (!token) return 0;
@@ -323,13 +335,14 @@ export const MyTokenPage: React.FC = () => {
                 Your turn has passed. You can take a new token to rejoin the line.
               </p>
             </div>
-            <Link
-              to="/token"
+            <button
+              type="button"
+              onClick={handleTakeNewToken}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-all1-coral text-white font-medium rounded-btn hover:bg-opacity-95 transition tap-target text-xs w-full shadow-sm"
             >
               <span>{t('myToken.takeNewTokenBtn')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            </button>
           </div>
         )}
 
@@ -357,13 +370,14 @@ export const MyTokenPage: React.FC = () => {
         {token.status === 'cancelled' && (
           <div className="p-5 bg-gray-50 border border-gray-200 text-gray-700 rounded-card text-center space-y-3">
             <p className="font-semibold text-sm">{t('myToken.cancelledBanner')}</p>
-            <Link
-              to="/token"
+            <button
+              type="button"
+              onClick={handleTakeNewToken}
               className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-all1-cobalt text-white font-medium rounded-btn hover:bg-opacity-95 transition tap-target text-xs shadow-sm"
             >
               <span>{t('myToken.takeNewTokenBtn')}</span>
               <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            </button>
           </div>
         )}
 

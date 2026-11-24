@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Header } from '../components/common/Header';
 import { Footer } from '../components/common/Footer';
+import { Skeleton } from '../components/common/Skeleton';
 import { QrCard } from '../components/queue/QrCard';
 import { useI18n } from '../lib/i18n';
 import { useQueue } from '../context/QueueContext';
@@ -39,6 +40,7 @@ export const LandingPage: React.FC = () => {
     getBarberStatus,
     findActiveTokenByPhone,
     isLive,
+    loading,
   } = useQueue();
 
   const [isFindModalOpen, setIsFindModalOpen] = useState(false);
@@ -201,47 +203,55 @@ export const LandingPage: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {barbers.map((b) => {
-                const bStatus = getBarberStatus(b);
-                const bWait = getBarberWaitMinutes(b.id);
+              {loading ? (
+                <>
+                  <Skeleton className="h-24 rounded-card" />
+                  <Skeleton className="h-24 rounded-card" />
+                  <Skeleton className="h-24 rounded-card" />
+                </>
+              ) : (
+                barbers.map((b) => {
+                  const bStatus = getBarberStatus(b);
+                  const bWait = getBarberWaitMinutes(b.id);
 
-                const dotColor =
-                  bStatus === 'Free'
-                    ? 'bg-all1-lime'
-                    : bStatus === 'Working'
-                    ? 'bg-all1-aqua'
-                    : 'bg-all1-sun';
+                  const dotColor =
+                    bStatus === 'Free'
+                      ? 'bg-all1-lime'
+                      : bStatus === 'Working'
+                      ? 'bg-all1-aqua'
+                      : 'bg-all1-sun';
 
-                return (
-                  <div
-                    key={b.id}
-                    className="bg-white rounded-card p-5 border border-all1-cloud shadow-sm hover:shadow-md transition-shadow flex items-center gap-4"
-                  >
-                    <div className="w-12 h-12 rounded-2xl bg-hero-gradient text-white font-heading font-bold text-lg flex items-center justify-center shrink-0 shadow-sm">
-                      {b.name.charAt(0)}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <h3 className="font-heading font-semibold text-all1-navy truncate">
-                          {b.name}
-                        </h3>
-                        <span
-                          className={`w-2.5 h-2.5 rounded-full ${dotColor}`}
-                          title={bStatus}
-                        />
+                  return (
+                    <div
+                      key={b.id}
+                      className="bg-white rounded-card p-5 border border-all1-cloud shadow-sm hover:shadow-md transition-shadow flex items-center gap-4"
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-hero-gradient text-white font-heading font-bold text-lg flex items-center justify-center shrink-0 shadow-sm">
+                        {b.name.charAt(0)}
                       </div>
-                      <p className="text-xs text-gray-500 mt-1 flex items-center gap-1 font-medium">
-                        <Clock className="w-3 h-3 text-gray-400" />
-                        {bStatus === 'On break'
-                          ? t('status.onBreak')
-                          : bWait === 0
-                          ? t('status.free')
-                          : `~${bWait} ${t('landing.mins')} wait`}
-                      </p>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-heading font-semibold text-all1-navy truncate">
+                            {b.name}
+                          </h3>
+                          <span
+                            className={`w-2.5 h-2.5 rounded-full ${dotColor}`}
+                            title={bStatus}
+                          />
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1 flex items-center gap-1 font-medium">
+                          <Clock className="w-3 h-3 text-gray-400" />
+                          {bStatus === 'On break'
+                            ? t('status.onBreak')
+                            : bWait === 0
+                            ? t('status.free')
+                            : `~${bWait} ${t('landing.mins')} wait`}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              )}
             </div>
           </section>
 
@@ -251,35 +261,45 @@ export const LandingPage: React.FC = () => {
               {t('landing.servicesTitle')}
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {services
-                .filter((s) => s.active)
-                .map((s) => {
-                  const IconComp = iconMap[s.icon] || Scissors;
-                  return (
-                    <div
-                      key={s.id}
-                      className="bg-white rounded-card p-4 border border-all1-cloud shadow-sm flex items-center justify-between gap-3"
-                    >
-                      <div className="flex items-center gap-3 min-w-0">
-                        <div className="w-10 h-10 rounded-xl bg-all1-snow text-all1-cobalt flex items-center justify-center shrink-0 border border-all1-cloud">
-                          <IconComp className="w-5 h-5" />
+              {loading ? (
+                <>
+                  <Skeleton className="h-20 rounded-card" />
+                  <Skeleton className="h-20 rounded-card" />
+                  <Skeleton className="h-20 rounded-card" />
+                  <Skeleton className="h-20 rounded-card" />
+                  <Skeleton className="h-20 rounded-card" />
+                </>
+              ) : (
+                services
+                  .filter((s) => s.active)
+                  .map((s) => {
+                    const IconComp = iconMap[s.icon] || Scissors;
+                    return (
+                      <div
+                        key={s.id}
+                        className="bg-white rounded-card p-4 border border-all1-cloud shadow-sm flex items-center justify-between gap-3"
+                      >
+                        <div className="flex items-center gap-3 min-w-0">
+                          <div className="w-10 h-10 rounded-xl bg-all1-snow text-all1-cobalt flex items-center justify-center shrink-0 border border-all1-cloud">
+                            <IconComp className="w-5 h-5" />
+                          </div>
+                          <div className="min-w-0">
+                            <h4 className="font-medium text-sm text-all1-navy truncate">
+                              {lang === 'gu' ? s.name_gu : s.name_en}
+                            </h4>
+                            <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5 font-medium">
+                              <Clock className="w-3 h-3 text-gray-400" />
+                              {s.minutes} {t('landing.mins')}
+                            </span>
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <h4 className="font-medium text-sm text-all1-navy truncate">
-                            {lang === 'gu' ? s.name_gu : s.name_en}
-                          </h4>
-                          <span className="text-xs text-gray-500 flex items-center gap-1 mt-0.5 font-medium">
-                            <Clock className="w-3 h-3 text-gray-400" />
-                            {s.minutes} {t('landing.mins')}
-                          </span>
-                        </div>
+                        <span className="font-mono font-bold text-all1-cobalt text-base shrink-0">
+                          ₹{s.price}
+                        </span>
                       </div>
-                      <span className="font-mono font-bold text-all1-cobalt text-base shrink-0">
-                        ₹{s.price}
-                      </span>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+              )}
             </div>
           </section>
         </div>

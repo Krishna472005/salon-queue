@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Header } from '../components/common/Header';
 import { Footer } from '../components/common/Footer';
 import { ServiceCard } from '../components/queue/ServiceCard';
@@ -23,6 +23,9 @@ type Step = 1 | 2 | 3;
 export const GetTokenPage: React.FC = () => {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const location = useLocation();
+  const prefill = (location.state as { prefillName?: string; prefillPhone?: string }) || {};
+
   const { user, loginWithGoogle } = useAuth();
   const {
     services,
@@ -41,8 +44,10 @@ export const GetTokenPage: React.FC = () => {
   const [currentStep, setCurrentStep] = useState<Step>(1);
 
   // Form state
-  const [name, setName] = useState(user?.user_metadata?.full_name || '');
-  const [phone, setPhone] = useState('');
+  const [name, setName] = useState(
+    prefill.prefillName || user?.user_metadata?.full_name || ''
+  );
+  const [phone, setPhone] = useState(prefill.prefillPhone || '');
   const [selectedServiceIds, setSelectedServiceIds] = useState<string[]>([
     services[0]?.id || '',
   ]);

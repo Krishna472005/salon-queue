@@ -22,6 +22,17 @@ button, a, input, select {
   touch-action: manipulation;
 }
 
+.tap-target {
+  min-height: 44px;
+}
+
+/* Ensure smooth word wrapping in Gujarati */
+.font-gujarati {
+  word-break: normal;
+  overflow-wrap: break-word;
+  line-height: 1.6;
+}
+
 /* Base body style */
 body {
   margin: 0;
