@@ -98,6 +98,10 @@
     "releaseConfirmMsg": "તમે કતારમાં તમારી જગ્યા ગુમાવશો. આ પાછું નહીં થઈ શકે.",
     "releaseConfirmYes": "હા, ટોકન રદ કરો",
     "releaseConfirmNo": "ટોકન ચાલુ રાખો",
+    "tokenNotFound": "ટોકન મળ્યું નથી",
+    "tokenNotFoundDesc": "આ ID વાળું ટોકન મળ્યું નથી. કદાચ તે રદ થઈ ગયું છે.",
+    "gotItBtn": "સમજાઈ ગયું! ખુરશી પાસે જાઓ",
+    "cancelledBanner": "આ ટોકન રદ કરવામાં આવ્યું છે.",
     "doneMsg": "તાજા અને સ્માર્ટ! ફરી મળીશું."
   },
   "reception": {

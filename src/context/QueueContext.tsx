@@ -22,6 +22,9 @@ interface QueueContextType {
     preferredBarberId?: string | null
   ) => Promise<{ tokenId: string; isExisting?: boolean }>;
   findActiveTokenByPhone: (phone: string) => Promise<QueueEntry | null>;
+  getTokenById: (tokenId: string) => Promise<QueueEntry | null>;
+  extendRunningLate: (tokenId: string) => Promise<boolean>;
+  releaseCustomerToken: (tokenId: string) => Promise<boolean>;
   refreshData: () => Promise<void>;
 }
 
@@ -420,6 +423,73 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
+  // Get token by ID
+  const getTokenById = async (tokenId: string): Promise<QueueEntry | null> => {
+    // Check in-memory list first
+    const inMem = queueEntries.find((e) => e.id === tokenId);
+    if (inMem) return inMem;
+
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase
+        .from('queue_entries')
+        .select('*')
+        .eq('id', tokenId)
+        .maybeSingle();
+
+      if (!error && data) {
+        return data as QueueEntry;
+      }
+      return null;
+    } else {
+      const allLocal = getLocalQueue();
+      return allLocal.find((e) => e.id === tokenId) || null;
+    }
+  };
+
+  // Extend running late (+5 min once)
+  const extendRunningLate = async (tokenId: string): Promise<boolean> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('extend_late', {
+        p_token_id: tokenId,
+      });
+      if (error) {
+        throw new Error(error.message);
+      }
+      await fetchData();
+      return Boolean(data);
+    } else {
+      const all = getLocalQueue();
+      const updated = all.map((e) =>
+        e.id === tokenId ? { ...e, late_extension_used: true } : e
+      );
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return true;
+    }
+  };
+
+  // Release customer token
+  const releaseCustomerToken = async (tokenId: string): Promise<boolean> => {
+    if (isSupabaseConfigured) {
+      const { data, error } = await supabase.rpc('release_token', {
+        p_token_id: tokenId,
+      });
+      if (error) {
+        throw new Error(error.message);
+      }
+      await fetchData();
+      return Boolean(data);
+    } else {
+      const all = getLocalQueue();
+      const updated = all.map((e) =>
+        e.id === tokenId ? { ...e, status: 'cancelled' as const } : e
+      );
+      saveLocalQueue(updated);
+      setQueueEntries(updated.filter((e) => ['waiting', 'called', 'in_chair'].includes(e.status)));
+      return true;
+    }
+  };
+
   return (
     <QueueContext.Provider
       value={{
@@ -437,6 +507,9 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         getBarberStatus,
         takeOnlineToken,
         findActiveTokenByPhone,
+        getTokenById,
+        extendRunningLate,
+        releaseCustomerToken,
         refreshData: fetchData,
       }}
     >

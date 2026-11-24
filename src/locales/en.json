@@ -98,6 +98,10 @@
     "releaseConfirmMsg": "You will lose your place in line. This cannot be undone.",
     "releaseConfirmYes": "Yes, release my token",
     "releaseConfirmNo": "Keep my token",
+    "tokenNotFound": "Token not found",
+    "tokenNotFoundDesc": "We couldn't find a token with this ID. It may have expired or been removed.",
+    "gotItBtn": "Got it! Go to chair",
+    "cancelledBanner": "This token was released.",
     "doneMsg": "Fresh and sharp! See you soon."
   },
   "reception": {
