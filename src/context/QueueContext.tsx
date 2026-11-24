@@ -65,7 +65,7 @@ const defaultSettings: Settings = {
   id: 1,
   salon_name: 'ALL1',
   open_time: '10:00',
-  close_time: '21:00',
+  close_time: '23:59',
   online_tokens_on: true,
   last_token: 0,
   token_date: new Date().toISOString().split('T')[0],
@@ -115,7 +115,15 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         .maybeSingle();
 
       if (!sErr && sData) {
-        setSettings(sData as Settings);
+        const loadedSettings = sData as Settings;
+        // If close_time is still set to the old 21:00 default, upgrade it in memory to 23:59 (12 AM midnight)
+        if (
+          loadedSettings.close_time === '21:00' ||
+          loadedSettings.close_time === '21:00:00'
+        ) {
+          loadedSettings.close_time = '23:59';
+        }
+        setSettings(loadedSettings);
       }
 
       // 2. Fetch services
@@ -234,8 +242,11 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const [openH, openM] = (settings.open_time || '10:00').split(':').map(Number);
       const openMinutesOfDay = openH * 60 + openM;
 
-      const [closeH, closeM] = (settings.close_time || '21:00').split(':').map(Number);
-      const closeMinutesOfDay = closeH * 60 + closeM;
+      const [closeH, closeM] = (settings.close_time || '23:59').split(':').map(Number);
+      let closeMinutesOfDay = closeH * 60 + closeM;
+      if (closeMinutesOfDay === 0 || closeH === 24) {
+        closeMinutesOfDay = 24 * 60; // 1440 = 12 AM midnight
+      }
       const cutoffMinutesOfDay = closeMinutesOfDay - 20;
 
       if (currentMinutesOfDay < openMinutesOfDay) {
@@ -248,7 +259,7 @@ export const QueueProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (currentMinutesOfDay >= cutoffMinutesOfDay && currentMinutesOfDay < closeMinutesOfDay) {
         return {
           isOnlineTokensPaused: true,
-          pauseReason: 'Online tokens stop 20 minutes before closing (closes 9 PM). Walk-ins welcome.',
+          pauseReason: `Online tokens stop 20 minutes before closing (closes at ${settings.close_time}). Walk-ins welcome.`,
         };
       }
 

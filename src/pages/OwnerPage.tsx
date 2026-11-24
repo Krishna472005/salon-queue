@@ -64,9 +64,15 @@ export const OwnerPage: React.FC = () => {
   const [servicePrice, setServicePrice] = useState(300);
   const [serviceIcon, setServiceIcon] = useState('scissors');
 
+  // Helper to ensure HH:mm format for HTML time inputs
+  const formatTimeInput = (tStr?: string, fallback: string = '23:59') => {
+    if (!tStr) return fallback;
+    return tStr.slice(0, 5);
+  };
+
   // Salon settings form state
-  const [openTime, setOpenTime] = useState(settings?.open_time || '10:00');
-  const [closeTime, setCloseTime] = useState(settings?.close_time || '21:00');
+  const [openTime, setOpenTime] = useState(formatTimeInput(settings?.open_time, '10:00'));
+  const [closeTime, setCloseTime] = useState(formatTimeInput(settings?.close_time, '23:59'));
   const [onlineTokensOn, setOnlineTokensOn] = useState(settings?.online_tokens_on !== false);
 
   const [feedbackMsg, setFeedbackMsg] = useState('');
@@ -75,8 +81,8 @@ export const OwnerPage: React.FC = () => {
   // Sync settings when loaded
   useEffect(() => {
     if (settings) {
-      setOpenTime(settings.open_time || '10:00');
-      setCloseTime(settings.close_time || '21:00');
+      setOpenTime(formatTimeInput(settings.open_time, '10:00'));
+      setCloseTime(formatTimeInput(settings.close_time, '23:59'));
       setOnlineTokensOn(settings.online_tokens_on !== false);
     }
   }, [settings]);

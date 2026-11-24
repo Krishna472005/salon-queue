@@ -20,15 +20,15 @@ create table if not exists settings (
   id int primary key default 1 check (id = 1),
   salon_name text default 'ALL1',
   open_time time default '10:00',
-  close_time time default '21:00',
+  close_time time default '23:59:59',
   online_tokens_on boolean default true,
   last_token int default 0,
   token_date date default current_date
 );
 
 insert into settings (id, salon_name, open_time, close_time, online_tokens_on, last_token, token_date)
-values (1, 'ALL1', '10:00', '21:00', true, 0, current_date)
-on conflict (id) do nothing;
+values (1, 'ALL1', '10:00', '23:59:59', true, 0, current_date)
+on conflict (id) do update set close_time = '23:59:59';
 
 -- Services Table
 create table if not exists services (
