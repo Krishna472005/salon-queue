@@ -42,7 +42,9 @@
     "findModalBtn": "ટોકન શોધો",
     "findModalNotFound": "આ નંબર માટે કોઈ સક્રિય ટોકન મળ્યું નથી.",
     "mins": "મિનિટ",
-    "anyBarber": "કોઈપણ ઉપલબ્ધ હજામ"
+    "anyBarber": "કોઈપણ ઉપલબ્ધ હજામ",
+    "onlineTokensClosed": "ઓનલાઇન ટોકન હાલમાં બંધ છે. સીધા આવી શકો છો.",
+    "viewMenu": "મેનુ જુઓ"
   },
   "getToken": {
     "title": "ટોકન મેળવો",
@@ -60,6 +62,9 @@
     "fastestOption": "સૌથી ઝડપી વારો",
     "currentWait": "અત્યારનો પ્રતીક્ષા સમય",
     "summaryServices": "{{count}} સેવા(ઓ)",
+    "nextBtn": "આગળ",
+    "backBtn": "પાછા",
+    "waitApprox": "રાહ ≈ {{wait}}",
     "confirmBtn": "ટોકન કન્ફર્મ કરો",
     "submitting": "ટોકન બુક થઈ રહ્યું છે…",
     "errMaxServices": "તમે વધુમાં વધુ 4 સેવાઓ પસંદ કરી શકો છો.",

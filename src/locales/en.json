@@ -42,7 +42,9 @@
     "findModalBtn": "Look up token",
     "findModalNotFound": "No active token found for this phone number.",
     "mins": "min",
-    "anyBarber": "Any available barber"
+    "anyBarber": "Any available barber",
+    "onlineTokensClosed": "Online tokens are currently paused. Walk-ins are welcome.",
+    "viewMenu": "View Menu"
   },
   "getToken": {
     "title": "Take a Token",
@@ -60,6 +62,9 @@
     "fastestOption": "Fastest wait",
     "currentWait": "Current wait",
     "summaryServices": "{{count}} service(s)",
+    "nextBtn": "Next",
+    "backBtn": "Back",
+    "waitApprox": "wait ≈ {{wait}}",
     "confirmBtn": "Confirm token",
     "submitting": "Reserving your token…",
     "errMaxServices": "You can choose a maximum of 4 services.",

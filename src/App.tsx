@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { I18nProvider } from './lib/i18n';
 import { AuthProvider } from './context/AuthContext';
+import { QueueProvider } from './context/QueueContext';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { LandingPage } from './pages/LandingPage';
@@ -19,49 +20,51 @@ export const App: React.FC = () => {
     <ErrorBoundary>
       <I18nProvider>
         <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              {/* Public customer routes */}
-              <Route path="/" element={<LandingPage />} />
-              <Route path="/token" element={<GetTokenPage />} />
-              <Route path="/t/:id" element={<MyTokenPage />} />
-              
-              {/* Public waiting room display */}
-              <Route path="/tv" element={<TvPage />} />
+          <QueueProvider>
+            <BrowserRouter>
+              <Routes>
+                {/* Public customer routes */}
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/token" element={<GetTokenPage />} />
+                <Route path="/t/:id" element={<MyTokenPage />} />
 
-              {/* Staff authentication */}
-              <Route path="/login" element={<LoginPage />} />
+                {/* Public waiting room display */}
+                <Route path="/tv" element={<TvPage />} />
 
-              {/* Protected Staff Routes */}
-              <Route
-                path="/reception"
-                element={
-                  <ProtectedRoute allowedRoles={['receptionist', 'owner']}>
-                    <ReceptionPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/barber/:name"
-                element={
-                  <ProtectedRoute allowedRoles={['barber', 'owner']}>
-                    <BarberPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/owner"
-                element={
-                  <ProtectedRoute allowedRoles={['owner']}>
-                    <OwnerPage />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Staff authentication */}
+                <Route path="/login" element={<LoginPage />} />
 
-              {/* 404 handler */}
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </BrowserRouter>
+                {/* Protected Staff Routes */}
+                <Route
+                  path="/reception"
+                  element={
+                    <ProtectedRoute allowedRoles={['receptionist', 'owner']}>
+                      <ReceptionPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/barber/:name"
+                  element={
+                    <ProtectedRoute allowedRoles={['barber', 'owner']}>
+                      <BarberPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path="/owner"
+                  element={
+                    <ProtectedRoute allowedRoles={['owner']}>
+                      <OwnerPage />
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* 404 handler */}
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </BrowserRouter>
+          </QueueProvider>
         </AuthProvider>
       </I18nProvider>
     </ErrorBoundary>
